@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Чат</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Manrope:wght@200..800&family=Unbounded:wght@200..900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Manrope", sans-serif;
+      background: transparent;
+      color: #EBEBEB;
+      height: 100vh;
+      width: 100vw;
+      font-weight: 500;
+    }
+    #chat {
+      background: #141414;
+      min-width: 100%;
+      min-height: 100%;
+      border-radius: 24px;
+      padding: 12px;
+    }
+    .user {
+      font-weight: 800;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chat"></div>
+  <script>
+    const chat = document.getElementById('chat');
+    const socket = new WebSocket(`ws://${location.host}`);
+
+    socket.onmessage = (event) => {
+      const { user, message, color } = JSON.parse(event.data);
+      const el = document.createElement('div');
+      el.className = 'message';
+      el.innerHTML = `<span class="user" style="color:${color}">${user}:</span> ${message}`;
+      chat.appendChild(el);
+      chat.scrollTop = chat.scrollHeight;
+    };
+  </script>
+</body>
+
+</html>

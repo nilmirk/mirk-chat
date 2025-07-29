@@ -1,0 +1,17 @@
+{
+  "name": "mirk-chat",
+  "version": "1.0.0",
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      "chat.html"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ]
+  },
+  "dependencies": {
+    "tmi.js": "^1.8.5",
+    "ws": "^8.12.0"
+  }
+}
