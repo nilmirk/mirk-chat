@@ -20,7 +20,6 @@
 ## Refresh Token
 
 * Получить можно на [twitchtokengenerator.com](https://twitchtokengenerator.com).
-* Права: `chat:read`.
 
 ---
 
