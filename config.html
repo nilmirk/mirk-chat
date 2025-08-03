@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Редактор конфигурации</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Manrope", sans-serif;
+      background: #141414;
+      color: #EBEBEB;
+      padding: 24px;
+    }
+    h1 {
+      margin-bottom: 16px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+    input, textarea {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 4px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    textarea {
+      height: 160px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 20px;
+      background: #2e8b57;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #a0ffa0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Настройки Twitch-бота</h1>
+
+  <label>
+    Канал:
+    <input type="text" id="channel" placeholder="Название канала" />
+  </label>
+
+  <label>
+    Refresh Token:
+    <input type="text" id="refreshToken" placeholder="Refresh token от Twitch Token Generator" />
+  </label>
+
+  <label>
+    Команды (формат JSON):
+    <textarea id="commands" placeholder='{ "\!hello": "Привет, {user}!" }'></textarea>
+  </label>
+
+  <button onclick="save()">💾 Сохранить</button>
+  <div id="status"></div>
+
+  <script>
+    async function load() {
+      try {
+        const res = await fetch('/config');
+        const config = await res.json();
+        document.getElementById('channel').value = config.channel || '';
+        document.getElementById('refreshToken').value = config.refreshToken || '';
+        document.getElementById('commands').value = JSON.stringify(config.commands || {}, null, 2);
+      } catch (e) {
+        document.getElementById('status').textContent = '❌ Ошибка загрузки конфигурации';
+      }
+    }
+
+    async function save() {
+      const status = document.getElementById('status');
+      try {
+        const config = {
+          channel: document.getElementById('channel').value.trim(),
+          refreshToken: document.getElementById('refreshToken').value.trim(),
+          commands: JSON.parse(document.getElementById('commands').value)
+        };
+        const res = await fetch('/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(config)
+        });
+
+        if (res.ok) {
+          status.textContent = '✅ Конфигурация сохранена';
+        } else {
+          status.textContent = '❌ Ошибка при сохранении';
+        }
+      } catch (e) {
+        status.textContent = '❌ Неверный формат JSON в командах';
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

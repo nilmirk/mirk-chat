@@ -46,7 +46,7 @@ function getAccessToken(refreshToken) {
 }
 
 async function loadOrCreateConfig() {
-  let config = { refreshToken: '', channel: '' };
+  let config = { refreshToken: '', channel: '', commands: {} };
 
   if (fs.existsSync(CONFIG_PATH)) {
     try {
@@ -125,7 +125,6 @@ async function main() {
   }
 
   client.on('message', (channel, tags, message, self) => {
-    if (self) return;
     const data = {
       user: tags['display-name'],
       message,
@@ -137,6 +136,12 @@ async function main() {
         ws.send(json);
       }
     });
+
+    if (message.startsWith('!') && config.commands && config.commands[message]) {
+      const response = config.commands[message].replace('{user}', tags['display-name']);
+      client.say(channel, response);
+    }
+
   });
 
   server.listen(3000, () => {
