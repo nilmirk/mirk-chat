@@ -4,22 +4,11 @@
 
 ---
 
-## Возможности
-
-* Подключение к любому Twitch-каналу по имени
-* Авторизация через Refresh Token с [twitchtokengenerator.com](https://twitchtokengenerator.com)
-* Цветные ники, как в Twitch
-* Запуск из `.exe` без установки Node.js
-* Сохраняет канал и токен в `config.json` рядом с `.exe`
-
----
-
 ## Запуск
 
 1. Скачай репозиторий.
 2. Запусти команадой `npm i` `node server.js`.
 3. При первом запуске введи:
-
    * Название Twitch-канала (без @)
    * Refresh Token
 4. Данные сохранятся в `config.json`.
